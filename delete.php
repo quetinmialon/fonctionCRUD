@@ -1,10 +1,11 @@
 <?php 
 require ('functions.php');
-$pdo = getPDO("mysql:host=localhost;dbname=blog", "root", "");
-$posts = getPostsWithCategories($pdo);
+//appel des fonctions liant a notre BDD
+$pdo = getPDO("mysql:host=localhost;dbname=recipes", "root", "");
+$recipes = getRecipesWithCategories($pdo);
 $categories = getAllCategories($pdo);
-if(! empty($_POST)){
-    $status = deletePost($pdo,$_POST['id']);
+if(! empty($_POST)){ // si la superglobale post n'est pas vide, ça signifie qu'on doit supprimer l'entrée présente dans la BDD
+    $status = deleteRecipe($pdo,$_POST['id']);
 }
 ?>
 
@@ -13,32 +14,33 @@ if(! empty($_POST)){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>suppression</title>
 </head>
 <header>
-<nav style="display : flex; flex-direction : row; gap : 20px">
-        <a href="create.php"><button>créer un nouveau poste</button></a>
-        <a href="delete.php"><button>supprimer un poste</button></a>
+    <nav class ="flex justify-center gap-1 p-2 bg-neutral-400 color-white">
+        <a href="index.php"><button class ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">accueil</button></a>
+        <a href="create.php"><button class ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">créer une nouvelle recette</button></a>
+        <a href="delete.php"><button class ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">supprimer une recette</button></a>
         <?php foreach ($categories as $category): ?>
             <a href="category.php?id=<?= $category['id'] ?>">
-                <button>
+                <button class ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <?= $category['name'] ?>
                 </button>
             </a>
 
         <?php endforeach ?>
-        <button>sans categories</button>
     </nav>
 </header>
 <body>
-    <form action="" method ="post">
+    <form action="" method ="post" class="p-8 max-w-md mx-auto">
         <label for="id"></label>
-        <select name="id">
-            <?php foreach ($posts['data'] as $post): ?>
-                <option value="<?= $post['postsId'] ?>"><?= $post['title'] ?></option>
+        <select name="id" class ="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+            <?php foreach ($recipes['data'] as $recipe): ?>
+                <option value="<?= $recipe['recipesId'] ?>"><?= $recipe['title'] ?></option>
             <?php endforeach ?>   
         </select>
-        <input type="submit" value="Supprimer le poste">
+        <input type="submit" value="Supprimer la recette" class ="bg-emerald-400 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">
     </form>
 </body>
 </html>
